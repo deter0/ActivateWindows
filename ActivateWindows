@@ -64,7 +64,6 @@ class ActivateWindows (Gtk.Window):
 		ctx.show_text("Go to PC settings to activate Windows.");
 		
 		ctx.restore()
-		self.queue_draw()
 
 def main():
 	win = ActivateWindows();
