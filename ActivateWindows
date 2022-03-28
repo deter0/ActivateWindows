@@ -1,0 +1,65 @@
+#!/bin/python3
+import cairo
+
+import gi
+gi.require_version('Gtk', '3.0')
+gi.require_version('Gdk', '3.0')
+
+from gi.repository import Gtk, Gdk
+
+root = Gdk.get_default_root_window()
+screen = root.get_screen()
+class Highlight (Gtk.Window):
+	def __init__(self, opacity=0):
+		super().__init__(Gtk.WindowType.POPUP)
+		
+		self.set_app_paintable(True);
+		screen = self.get_screen();
+		visual = screen.get_rgba_visual();
+		self.set_visual(visual);
+		self.show_all();
+		
+		width, height = screen.get_width(), screen.get_height();
+		SELF_WIDTH = 350
+		SELF_HEIGHT = 100
+		self.resize(SELF_WIDTH, 100);
+		self.move(width - (SELF_WIDTH + 15), height - (SELF_HEIGHT + 15));
+		
+		self.set_decorated(False);
+		self.set_skip_taskbar_hint(True)
+		self.set_skip_pager_hint(True)
+		self.set_keep_above(True)
+		self.set_type_hint(Gdk.WindowTypeHint.NOTIFICATION)
+		
+		self.set_accept_focus(False)
+		self.set_focus_on_map(False)
+		self.input_shape_combine_region(cairo.Region())
+		
+		# Keep state.
+		self._regions = []
+		self.opacity = opacity
+
+		self.connect('draw', self._on_draw)
+	def _on_draw(self, _wid, ctx):
+		ctx.save()
+		
+		ctx.set_source_rgba(166, 166, 166, 0.6);
+		ctx.select_font_face("Segoe UI",
+				cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL);
+		ctx.set_font_size(26);
+		ctx.move_to(0, 50 - 26 / 2);
+		ctx.show_text("Activate Windows");
+		ctx.set_font_size(18);
+		ctx.move_to(0, 50 + 26 / 2);
+		ctx.show_text("Go to PC settings to activate Windows.");
+		
+		ctx.restore()
+		self.queue_draw()
+
+win = Highlight();
+win.connect("destroy", Gtk.main_quit);
+win.set_keep_above(True);
+win.set_title("Highlight")
+win.show_all()
+
+Gtk.main()
