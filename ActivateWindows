@@ -80,7 +80,10 @@ def main():
     Gtk.main()
 
 if __name__=="__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        exit(0)
 else:
     print("This program is not meant to be imported to other Python modules. Please run ActivateWindows as a standalone script!")
 
