@@ -2,6 +2,10 @@
 import cairo
 
 import gi
+
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning) # genius fix
+
 gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')
 
@@ -26,6 +30,10 @@ def get_screen_size(display):
 class ActivateWindows (Gtk.Window):
 	def __init__(self):
 		super().__init__(type=Gtk.WindowType.POPUP)
+		try: # in case it gets removed
+			self.set_wmclass("ActivateWindows", "ActivateWindows");
+		except:
+			pass;
 		
 		self.set_app_paintable(True);
 		screen = self.get_screen();
